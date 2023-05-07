@@ -94,7 +94,7 @@ it(description: 'can resolve route from string')
     ->group('router')
     ->defer(function (Router $router) {
         $action = new class {
-            public function __invoke(): true
+            public function __invoke(): bool
             {
                 return true;
             }
@@ -114,7 +114,7 @@ it(description: 'throws route not found exception')
     ->throws(exception: RouterNotFound::class)
     ->defer(callable: function (Router $router, string $uri, string $method) {
         $action = new class {
-            public function store()
+            public function store(): void
             {}
         };
 
