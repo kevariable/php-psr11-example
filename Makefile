@@ -4,7 +4,7 @@ build:
 setup:
 	make build
 	docker exec -it psr11-app composer install
-
+	make pest
 up:
 	docker-compose up -d
 
@@ -13,3 +13,6 @@ down:
 
 shell:
 	docker exec -it psr11-app /bin/bash
+
+pest:
+	./vendor/bin/pest --compact --parallel
