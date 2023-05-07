@@ -79,7 +79,7 @@ it(description: 'can resolve route from array')
     ->group('router')
     ->defer(function (Router $router) {
         $action = new class {
-            public function create(): true
+            public function create(): bool
             {
                 return true;
             }
