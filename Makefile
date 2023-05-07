@@ -12,7 +12,7 @@ down:
 	docker-compose down
 
 shell:
-	docker exec -it psr11-app /bin/bash
+	docker exec psr11-app /bin/bash
 
 pest:
 	./vendor/bin/pest --compact --parallel
