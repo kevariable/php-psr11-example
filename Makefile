@@ -3,7 +3,7 @@ build:
 
 setup:
 	make build
-	docker exec -it psr11-app composer install
+	docker exec psr11-app composer install
 	make pest
 up:
 	docker-compose up -d
