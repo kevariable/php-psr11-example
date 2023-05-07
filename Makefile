@@ -4,7 +4,6 @@ build:
 setup:
 	make build
 	docker exec psr11-app composer install
-	make pest
 up:
 	docker-compose up -d
 
