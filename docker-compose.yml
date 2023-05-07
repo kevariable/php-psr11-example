@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: psr11/app
+    container_name: psr11-app
+    restart: always
+    volumes:
+      - ./:/var/www
+  nginx:
+    image: nginx:1.19-alpine
+    container_name: psr11-nginx
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d

@@ -1,0 +1,15 @@
+{
+    "name": "kevariable/psr11",
+    "autoload": {
+        "psr-4": {
+            "Kevariable\\Psr11\\": "./src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kevin Abrar Khansa",
+            "email": "kevariable@gmail.com"
+        }
+    ],
+    "require": {}
+}
