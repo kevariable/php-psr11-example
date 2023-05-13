@@ -1,7 +1,9 @@
 <?php
 
+use Kevariable\Psr11\Foundation\Application;
 use Kevariable\Psr11\Http\Controllers\HomeController;
 use Kevariable\Psr11\Http\Controllers\PaymentGatewayController;
+use Kevariable\Psr11\Router\Data\ResolveData;
 use Kevariable\Psr11\Router\Router;
 
 require __DIR__.'/../vendor/autoload.php';
@@ -16,11 +18,10 @@ $router
     })
     ->post(path: '/payment-gateway', action: [PaymentGatewayController::class, 'store']);
 
-try {
-    echo $router->resolve(
-        uri: $_SERVER['REQUEST_URI'],
-        method: $_SERVER['REQUEST_METHOD']
-    );
-} catch (\Throwable $e) {
-    echo $e->getMessage();
-}
+
+$app = new Application($router);
+
+$app->boot(data: new ResolveData(
+    uri: $_SERVER['REQUEST_URI'],
+    method: $_SERVER['REQUEST_METHOD']
+));

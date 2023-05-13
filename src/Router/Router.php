@@ -2,6 +2,7 @@
 
 namespace Kevariable\Psr11\Router;
 
+use Kevariable\Psr11\Router\Data\ResolveData;
 use Kevariable\Psr11\Router\Exceptions\ActionNotFound;
 use Kevariable\Psr11\Router\Exceptions\RouterNotFound;
 
@@ -39,17 +40,16 @@ class Router
     /**
      * @throws ActionNotFound
      * @throws RouterNotFound
+     * @param ResolveData $data
      * @return mixed
-     * @param string $uri
-     * @param string $method
      */
-    public function resolve(string $uri, string $method): mixed
+    public function resolve(ResolveData $data): mixed
     {
-        $url = parse_url($uri);
+        $url = parse_url($data->uri);
 
         $path = $url['path'];
 
-        $action = $this->getAction(path: $path, method: $method);
+        $action = $this->getAction(path: $path, method: $data->method);
 
         if (! $action) {
             throw new RouterNotFound($path);

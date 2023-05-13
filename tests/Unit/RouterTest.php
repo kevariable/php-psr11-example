@@ -1,5 +1,6 @@
 <?php
 
+use Kevariable\Psr11\Router\Data\ResolveData;
 use Kevariable\Psr11\Router\Exceptions\RouterNotFound;
 use Kevariable\Psr11\Router\Router;
 
@@ -71,7 +72,7 @@ it(description: 'can resolve route from callable')
     ->defer(callable: function (Router $router) {
         $router->get(path: '/foo', action: fn () => true);
 
-        expect($router->resolve(uri: '/foo', method: 'GET'))
+        expect($router->resolve(new ResolveData(uri: '/foo', method: 'GET')))
             ->toBeTrue();
     });
 
@@ -87,7 +88,7 @@ it(description: 'can resolve route from array')
 
         $router->get(path: '/foo', action: [$action::class, 'create']);
 
-        expect($router->resolve(uri: '/foo', method: 'GET'))->toBeTrue();
+        expect($router->resolve(new ResolveData(uri: '/foo', method: 'GET')))->toBeTrue();
     });
 
 it(description: 'can resolve route from string')
@@ -102,7 +103,7 @@ it(description: 'can resolve route from string')
 
         $router->get(path: '/foo', action: $action::class);
 
-        expect($router->resolve(uri: '/foo', method: 'GET'))->toBeTrue();
+        expect($router->resolve(new ResolveData(uri: '/foo', method: 'GET')))->toBeTrue();
     });
 
 it(description: 'throws route not found exception')
@@ -113,12 +114,9 @@ it(description: 'throws route not found exception')
     ])
     ->throws(exception: RouterNotFound::class)
     ->defer(callable: function (Router $router, string $uri, string $method) {
-        $action = new class {
-            public function store(): void
-            {}
-        };
+        $action = new class {};
 
         $router->get(path: '/bar', action: [$action::class, 'create']);
 
-        $router->resolve($uri, $method);
+        $router->resolve(new ResolveData(uri: $uri, method: $method));
     });
