@@ -1,15 +1,18 @@
 <?php
 
+use Kevariable\Psr11\Container\Container;
+use Tests\Fixture\Router\NamedTypeController;
 use Kevariable\Psr11\Router\Data\ResolveData;
 use Kevariable\Psr11\Router\Exceptions\RouterNotFound;
 use Kevariable\Psr11\Router\Router;
 
 beforeEach()
     ->with(fn () => [
-        new Router()
+        new Router(new Container())
     ]);
 
 it(description: 'can registers a get route')
+
     ->group('router')
     ->defer(callable: function (Router $router) {
         $router->get(path: '/foo', action: 'Foo');
@@ -119,4 +122,12 @@ it(description: 'throws route not found exception')
         $router->get(path: '/bar', action: [$action::class, 'create']);
 
         $router->resolve(new ResolveData(uri: $uri, method: $method));
+    });
+
+it(description: 'can resolve router dependencies')
+    ->group('router')
+    ->defer(function (Router $router) {
+        $router->get(path: '/foo', action: NamedTypeController::class);
+
+        expect($router->resolve(data: new ResolveData(uri: '/foo', method: 'GET')))->toBeFalse();
     });

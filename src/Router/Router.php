@@ -2,13 +2,20 @@
 
 namespace Kevariable\Psr11\Router;
 
+use Kevariable\Psr11\Container\Container;
+use Kevariable\Psr11\Container\Exceptions\ContainerException;
 use Kevariable\Psr11\Router\Data\ResolveData;
 use Kevariable\Psr11\Router\Exceptions\ActionNotFound;
 use Kevariable\Psr11\Router\Exceptions\RouterNotFound;
+use ReflectionException;
 
 class Router
 {
     private array $routes = [];
+
+    public function __construct(public Container $container)
+    {
+    }
 
     protected function register(string $path, string | array | \Closure $action, string $method): self
     {
@@ -39,6 +46,8 @@ class Router
 
     /**
      * @throws ActionNotFound
+     * @throws ContainerException
+     * @throws ReflectionException
      * @throws RouterNotFound
      * @param ResolveData $data
      * @return mixed
@@ -56,7 +65,7 @@ class Router
         }
 
         return match (true) {
-            is_string($action) => call_user_func(new $action),
+            is_string($action) => call_user_func($this->container->get($action)),
             is_callable($action) => call_user_func($action),
             is_array($action) => $this->resolveArray($action)
         };
@@ -64,6 +73,10 @@ class Router
 
     /**
      * @throws ActionNotFound
+     * @throws ContainerException
+     * @throws ReflectionException
+     * @return mixed
+     * @param array $action
      */
     protected function resolveArray(array $action): mixed
     {
@@ -77,6 +90,6 @@ class Router
             throw new ActionNotFound($class, $method);
         }
 
-        return call_user_func_array([new $class, $method], []);
+        return call_user_func_array([$this->container->get($class), $method], []);
     }
 }
